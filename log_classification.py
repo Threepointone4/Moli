@@ -3,11 +3,6 @@ Steps :  1. Calculate freq of words
          2. Calculate look up for freq of that in train
          3. A simple log regression for classification """
 
-
-
-
-
-
 import pandas as pd
 
 import re
@@ -82,6 +77,7 @@ def build_freqs(tweets, ys):
 
     return freqs
 
+
 def sigmoid(z):
     '''
     Input:
@@ -122,6 +118,7 @@ def gradientDescent(x, y, theta, alpha, num_iters):
         theta = theta - (alpha / m) * (np.dot(np.transpose(x), (h - y)))
 
     J = float(J)
+
     return J, theta
 
 
@@ -142,7 +139,6 @@ def extract_features(tweet, freqs):
     # bias term is set to 1
     x[0, 0] = 1
 
-
     # loop through each word in the list of words
     for word in word_l:
         # increment the word count for the positive label 1
@@ -156,23 +152,21 @@ def extract_features(tweet, freqs):
 
 
 def train(input_df, text_name, label_name, split=0.80):
-
-    #shuffle
+    # shuffle
 
     input_df = input_df.sample(frac=1)
 
-    #split
-    no_train = int( len(input_df) * split )
+    # split
+    no_train = int(len(input_df) * split)
 
     train_x = input_df[text_name].to_list()[:no_train]
     test_x = input_df[text_name].to_list()[no_train:]
 
-    train_y = np.array(input_df[label_name].to_list()[:no_train])
-    test_y = np.array(input_df[label_name].to_list()[no_train:])
+    train_y = np.array(input_df[label_name].to_list()[:no_train]).reshape(-1, 1)
+    test_y = np.array(input_df[label_name].to_list()[no_train:]).reshape(-1, 1)
 
     # Freq build
     freqs = build_freqs(train_x, train_y)
-
 
     # training
 
@@ -189,7 +183,7 @@ def train(input_df, text_name, label_name, split=0.80):
 
     print("Training Completed")
 
-    #testing
+    # testing
     y_hat = []
 
     for tweet in test_x:
@@ -207,9 +201,9 @@ def train(input_df, text_name, label_name, split=0.80):
     # convert both to one-dimensional arrays in order to compare them using the '==' operator
     accuracy = sum(np.asarray(y_hat) == np.squeeze(test_y)) / len(y_hat)
 
-    print(f"The accruracy of the mode is : {accuracy}")
+    print(f"The accruracy of the model is : {accuracy}")
 
-    return theta , freqs
+    return theta, freqs
 
 
 def predict(text, freqs, theta):
@@ -228,30 +222,28 @@ def predict(text, freqs, theta):
     # make the prediction using x and theta
     y_pred = sigmoid(np.dot(x, theta))
 
-
     return y_pred
 
 
 if __name__ == '__main__':
 
-    #Some sample data - this will change accrording to data.
-    #Note currently this assumes only 2 classes and i.e 1 , 0
-
+    # Some sample data - this will change accrording to data.
+    # Note currently this assumes only 2 classes and i.e 1 , 0
 
     from nltk.corpus import twitter_samples
 
     all_positive_tweets = twitter_samples.strings('positive_tweets.json')
     all_negative_tweets = twitter_samples.strings('negative_tweets.json')
 
-    df_pos = pd.DataFrame({"text" : all_positive_tweets})
-    df_pos['label'] = np.ones((len(all_positive_tweets),1))
+    df_pos = pd.DataFrame({"text": all_positive_tweets})
+    df_pos['label'] = np.ones((len(all_positive_tweets), 1))
 
-    df_neg = pd.DataFrame({"text" : all_negative_tweets})
-    df_neg['label'] = np.zeros((len(all_negative_tweets),1))
+    df_neg = pd.DataFrame({"text": all_negative_tweets})
+    df_neg['label'] = np.zeros((len(all_negative_tweets), 1))
 
-    df = pd.concat([df_pos,df_neg],axis=0)
+    df = pd.concat([df_pos, df_neg], axis=0)
 
-    theta , freqs  = train(df,text_name='text',label_name='label')
+    theta, freqs = train(df, text_name='text', label_name='label')
 
     my_tweet = 'This is a ridiculously bright movie. The plot was terrible and I was sad until the ending!'
 
@@ -262,5 +254,3 @@ if __name__ == '__main__':
         print('Positive sentiment')
     else:
         print('Negative sentiment')
-
-
