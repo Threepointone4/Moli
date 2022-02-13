@@ -1,13 +1,19 @@
-""" This is a sample code to demonstrate a simple classification using count of words
-Steps :  1. Calculate freq of words
-         2. Calculate look up for freq of that in train
-         3. A simple log regression for classification """
+"""
+    This is a sample code to demonstrate a simple classification using count of words method
+
+    Steps :  1. Calculate freq of words ( eg :  how many times Bad comes in both class )
+             2. Calculate look up for freq of that in train
+             3. A simple log regression for classification
+
+"""
+
+# CHECK __main__ ( in the end to see how to use this )
 
 import pandas as pd
-
 import re
 import string
 import numpy as np
+import pickle
 
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
@@ -153,7 +159,6 @@ def extract_features(tweet, freqs):
 
 def train(input_df, text_name, label_name, split=0.80):
     # shuffle
-
     input_df = input_df.sample(frac=1)
 
     # split
@@ -225,11 +230,33 @@ def predict(text, freqs, theta):
     return y_pred
 
 
+def store_obj(obj, pickle_name):
+    with open(pickle_name, 'wb') as f:
+        pickle.dump(obj, f)
+    return None
+
+
+def load_obj(pickle_name):
+    with open(pickle_name, 'rb') as f:
+        obj = pickle.load(f)
+    return obj
+
+
+def get_accuracy(df, actual_clm_name, predicted_clm_name):
+    y_actually = df[actual_clm_name].to_list()
+    y_pred = df[predicted_clm_name].to_list()
+    if not len(y_actually) == len(y_pred):
+        assert "Some records have labels missing"
+    accuracy = sum(np.asarray(y_actually) == np.squeeze(y_pred)) / len(y_actually)
+    return accuracy
+
+
 if __name__ == '__main__':
 
     # Some sample data - this will change accrording to data.
     # Note currently this assumes only 2 classes and i.e 1 , 0
 
+    # nltk twitter data
     from nltk.corpus import twitter_samples
 
     all_positive_tweets = twitter_samples.strings('positive_tweets.json')
