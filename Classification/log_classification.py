@@ -231,18 +231,36 @@ def predict(text, freqs, theta):
 
 
 def store_obj(obj, pickle_name):
+    """
+
+    :param obj: obj which you want to pickle
+    :param pickle_name: the output pickle file name
+    :return: None , but it creates the pickle file for the obj passed
+    """
     with open(pickle_name, 'wb') as f:
         pickle.dump(obj, f)
     return None
 
 
 def load_obj(pickle_name):
+    """
+
+    :param pickle_name: The name of the pickle file which you want to load
+    :return:  pickle obj
+    """
     with open(pickle_name, 'rb') as f:
         obj = pickle.load(f)
     return obj
 
 
 def get_accuracy(df, actual_clm_name, predicted_clm_name):
+    """
+
+    :param df: dataframw which contains both predicted and actual label
+    :param actual_clm_name: colm name of actual label
+    :param predicted_clm_name: colm name of predicted label
+    :return: accuracy
+    """
     y_actually = df[actual_clm_name].to_list()
     y_pred = df[predicted_clm_name].to_list()
     if not len(y_actually) == len(y_pred):
