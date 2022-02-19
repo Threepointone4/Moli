@@ -1,5 +1,5 @@
 """
-    This is a sample code to demonstrate a simple classification using count of words method
+    This is a sample code to demonstrate a simple classification using count of words method + logestic regression
 
     Steps :  1. Calculate freq of words ( eg :  how many times Bad comes in both class )
              2. Calculate look up for freq of that in train
@@ -10,49 +10,7 @@
 # CHECK __main__ ( in the end to see how to use this )
 
 import pandas as pd
-import re
-import string
-import numpy as np
-import pickle
-
-from nltk.corpus import stopwords
-from nltk.stem import PorterStemmer
-from nltk.tokenize import TweetTokenizer
-
-
-def process_tweet(tweet):
-    """Process tweet function.
-    Input:
-        tweet: a string containing a tweet
-    Output:
-        tweets_clean: a list of words containing the processed tweet
-
-    """
-    stemmer = PorterStemmer()
-    stopwords_english = stopwords.words('english')
-    # remove stock market tickers like $GE
-    tweet = re.sub(r'\$\w*', '', tweet)
-    # remove old style retweet text "RT"
-    tweet = re.sub(r'^RT[\s]+', '', tweet)
-    # remove hyperlinks
-    tweet = re.sub(r'https?:\/\/.*[\r\n]*', '', tweet)
-    # remove hashtags
-    # only removing the hash # sign from the word
-    tweet = re.sub(r'#', '', tweet)
-    # tokenize tweets
-    tokenizer = TweetTokenizer(preserve_case=False, strip_handles=True,
-                               reduce_len=True)
-    tweet_tokens = tokenizer.tokenize(tweet)
-
-    tweets_clean = []
-    for word in tweet_tokens:
-        if (word not in stopwords_english and  # remove stopwords
-                word not in string.punctuation):  # remove punctuation
-            # tweets_clean.append(word)
-            stem_word = stemmer.stem(word)  # stemming word
-            tweets_clean.append(stem_word)
-
-    return tweets_clean
+from utils import *
 
 
 def build_freqs(tweets, ys):
@@ -82,17 +40,6 @@ def build_freqs(tweets, ys):
                 freqs[pair] = 1
 
     return freqs
-
-
-def sigmoid(z):
-    '''
-    Input:
-        z: is the input (can be a scalar or an array)
-    Output:
-        h: the sigmoid of z
-    '''
-    h = 1.0 / (1.0 + np.exp(-z))
-    return h
 
 
 def gradientDescent(x, y, theta, alpha, num_iters):
@@ -228,29 +175,6 @@ def predict(text, freqs, theta):
     y_pred = sigmoid(np.dot(x, theta))
 
     return y_pred
-
-
-def store_obj(obj, pickle_name):
-    """
-
-    :param obj: obj which you want to pickle
-    :param pickle_name: the output pickle file name
-    :return: None , but it creates the pickle file for the obj passed
-    """
-    with open(pickle_name, 'wb') as f:
-        pickle.dump(obj, f)
-    return None
-
-
-def load_obj(pickle_name):
-    """
-
-    :param pickle_name: The name of the pickle file which you want to load
-    :return:  pickle obj
-    """
-    with open(pickle_name, 'rb') as f:
-        obj = pickle.load(f)
-    return obj
 
 
 def get_accuracy(df, actual_clm_name, predicted_clm_name):
