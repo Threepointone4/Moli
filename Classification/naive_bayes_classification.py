@@ -13,14 +13,14 @@ from utils import *
 
 
 def count_tweets(result, tweets, ys):
-    '''
+    """
     Input:
         result: a dictionary that will be used to map each pair to its frequency
         tweets: a list of tweets
         ys: a list corresponding to the sentiment of each tweet (either 0 or 1)
     Output:
         result: a dictionary mapping each pair to its frequency
-    '''
+    """
 
     for y, tweet in zip(ys, tweets):
         for word in process_tweet(tweet):
@@ -39,7 +39,7 @@ def count_tweets(result, tweets, ys):
 
 
 def train_naive_bayes(freqs, train_x, train_y):
-    '''
+    """
     Input:
         freqs: dictionary from (word, label) to how often the word appears
         train_x: a list of tweets
@@ -47,7 +47,7 @@ def train_naive_bayes(freqs, train_x, train_y):
     Output:
         logprior: the log prior. (equation 3 above)
         loglikelihood: the log likelihood of you Naive bayes equation. (equation 6 above)
-    '''
+    """
     loglikelihood = {}
     logprior = 0
 
@@ -99,7 +99,7 @@ def train_naive_bayes(freqs, train_x, train_y):
 
 
 def naive_bayes_predict(tweet, logprior, loglikelihood):
-    '''
+    """
     Input:
         tweet: a string
         logprior: a number
@@ -107,7 +107,7 @@ def naive_bayes_predict(tweet, logprior, loglikelihood):
     Output:
         p: the sum of all the logliklihoods of each word in the tweet (if found in the dictionary) + logprior (a number)
 
-    '''
+    """
     # process the tweet to get a list of words
     word_l = process_tweet(tweet)
 
