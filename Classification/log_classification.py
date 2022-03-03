@@ -43,7 +43,7 @@ def build_freqs(tweets, ys):
 
 
 def gradientDescent(x, y, theta, alpha, num_iters):
-    '''
+    """
     Input:
         x: matrix of features which is (m,n+1)
         y: corresponding labels of the input matrix x, dimensions (m,1)
@@ -54,7 +54,7 @@ def gradientDescent(x, y, theta, alpha, num_iters):
         J: the final cost
         theta: your final weight vector
     Hint: you might want to print the cost to make sure that it is going down.
-    '''
+    """
     m = x.shape[0]
 
     for i in range(0, num_iters):
@@ -76,13 +76,13 @@ def gradientDescent(x, y, theta, alpha, num_iters):
 
 
 def extract_features(tweet, freqs):
-    '''
+    """
     Input:
         tweet: a list of words for one tweet
         freqs: a dictionary corresponding to the frequencies of each tuple (word, label)
     Output:
         x: a feature vector of dimension (1,3)
-    '''
+    """
     # process_tweet tokenizes, stems, and removes stopwords
     word_l = process_tweet(tweet)
 
@@ -159,14 +159,14 @@ def train(input_df, text_name, label_name, split=0.80):
 
 
 def predict(text, freqs, theta):
-    '''
+    """
     Input:
         tweet: a string
         freqs: a dictionary corresponding to the frequencies of each tuple (word, label)
         theta: (3,1) vector of weights
     Output:
         y_pred: the probability of a tweet being positive or negative
-    '''
+    """
 
     # extract the features of the tweet and store it into x
     x = extract_features(text, freqs)

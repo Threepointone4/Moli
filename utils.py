@@ -13,18 +13,18 @@ from nltk.tokenize import TweetTokenizer
 
 
 def lookup(freqs, word, label):
-    '''
+    """
     Input:
         freqs: a dictionary with the frequency of each pair (or tuple)
         word: the word to look up
         label: the label corresponding to the word
     Output:
         n: the number of times the word with its corresponding label appears.
-    '''
+    """
     n = 0  # freqs.get((word, label), 0)
 
     pair = (word, label)
-    if (pair in freqs):
+    if pair in freqs:
         n = freqs[pair]
 
     return n
@@ -66,12 +66,12 @@ def process_tweet(tweet):
 
 
 def sigmoid(z):
-    '''
+    """
     Input:
         z: is the input (can be a scalar or an array)
     Output:
         h: the sigmoid of z
-    '''
+    """
     h = 1.0 / (1.0 + np.exp(-z))
     return h
 
