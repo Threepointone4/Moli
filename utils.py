@@ -11,6 +11,31 @@ from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 from nltk.tokenize import TweetTokenizer
 
+import spacy
+from spacy.language import Language
+from spacy_language_detection import LanguageDetector
+
+
+class LangDetect:
+    def __init__(self):
+        # Load spacy model
+        self.spacy_obj = spacy.load("en_core_web_sm", disable=["tok2vec", "tagger", "attribute_ruler", "lemmatizer"])
+
+        # Language Detector Function
+        def get_lang_detector(nlp, name):
+            return LanguageDetector(seed=42)
+
+        # # Create instance for language detection
+        Language.factory("language_detector", func=get_lang_detector)
+        self.spacy_obj.add_pipe('language_detector', last=True)
+
+    def get_lang_batch(self, lst_text):
+        docs = list(
+            self.spacy_obj.pipe(lst_text))
+        languages = [doc._.language['language'] for doc in docs]
+        return languages
+
+
 
 def lookup(freqs, word, label):
     """
